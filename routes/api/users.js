@@ -39,7 +39,8 @@ router.post("/register", (request, response) => {
           user
             .save()
             .then(user => {
-              response.json(user);
+              const safeuser = { ...user, password: null };
+              response.json(safeuser);
             })
             .catch(error => console.log(error));
         });
@@ -99,4 +100,20 @@ router.get(
   }
 );
 
+// @route   DELETE api/users
+// @desc    Delete user and profile
+// @access  Private
+router.delete(
+  "/",
+  passport.authenticate("jwt", { session: false }),
+  (request, response) => {
+    Profile.findOneAndRemove({ user: request.user._id })
+      .then(() => {
+        User.findOneAndDelete({ _id: request.user._id }).then(() => {
+          response.json({ success: "true" });
+        });
+      })
+      .catch(error => response.status(404).json(error));
+  }
+);
 module.exports = router;

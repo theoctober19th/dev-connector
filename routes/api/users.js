@@ -39,7 +39,7 @@ router.post("/register", (request, response) => {
           user
             .save()
             .then(user => {
-              const safeuser = { ...user, password: null };
+              const safeuser = { ...user._doc, password: null };
               response.json(safeuser);
             })
             .catch(error => console.log(error));
@@ -116,4 +116,5 @@ router.delete(
       .catch(error => response.status(404).json(error));
   }
 );
+
 module.exports = router;

@@ -39,7 +39,8 @@ router.post("/register", (request, response) => {
           user
             .save()
             .then(user => {
-              const safeuser = { ...user._doc, password: null };
+              const safeuser = { ...user._doc };
+              delete safeuser.password;
               response.json(safeuser);
             })
             .catch(error => console.log(error));
@@ -67,7 +68,8 @@ router.post("/login", (req, res) => {
     bcrypt.compare(password, user.password).then(isMatch => {
       if (isMatch) {
         // res.json({ message: "Success" });
-        const payload = { ...user, password: null };
+        const payload = { ...user };
+        delete payload.password;
         const keys = require("../../config/keys");
         jwt.sign(
           payload,

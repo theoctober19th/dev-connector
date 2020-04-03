@@ -1,2 +1,12 @@
-export const GITHUB_CLIENT_ID = "e42c440408bafd770486";
-export const GITHUB_CLIENT_SECRET = "86bb98924107e4b2d921e0c89159b913417fb512";
+let githubClientId = "";
+let githubClientSecret = "";
+if (process.env.NODE_ENV === "production") {
+  githubClientId = require("./keys_prod").GITHUB_CLIENT_ID;
+  githubClientSecret = require("./keys_prod").GITHUB_CLIENT_SECRET;
+} else {
+  githubClientId = require("./keys_dev").GITHUB_CLIENT_ID;
+  githubClientSecret = require("./keys_dev").GITHUB_CLIENT_SECRET;
+}
+
+export const GITHUB_CLIENT_ID = githubClientId;
+export const GITHUB_CLIENT_SECRET = githubClientSecret;

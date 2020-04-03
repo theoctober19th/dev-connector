@@ -7,6 +7,7 @@ const cors = require("cors");
 const users = require("./routes/api/users");
 const profile = require("./routes/api/profile");
 const posts = require("./routes/api/posts");
+const path = require("path");
 
 const app = express();
 
@@ -32,14 +33,19 @@ app.use(passport.initialize());
 //Passport config
 require("./config/passport.js")(passport);
 
-app.get("/", (request, response) => {
-  response.send("hello world");
-});
-
 //Use Routes
 app.use("/api/users", users);
 app.use("/api/profile", profile);
 app.use("/api/posts", posts);
+
+//Server static assets if in production
+if (process.env.NODE_ENV === "production") {
+  //set static folder
+  app.use(express.static("client/build"));
+  app.get("*", (request, response) => {
+    response.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
+  });
+}
 
 const port = process.env.PORT || 5000;
 
